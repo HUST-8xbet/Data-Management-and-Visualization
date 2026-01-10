@@ -1,0 +1,17 @@
+# Bỏ qua thư mục môi trường ảo (CỰC KỲ QUAN TRỌNG)
+venv/
+env/
+
+# Bỏ qua file rác của Python
+__pycache__/
+*.pyc
+
+# Bỏ qua dữ liệu của MinIO, Postgres, Kafka (Quan trọng với dự án này)
+data/minio_storage/
+data/postgres_data/
+
+# Bỏ qua file cấu hình biến môi trường (chứa mật khẩu)
+.env
+
+# Bỏ qua file log
+*.log
