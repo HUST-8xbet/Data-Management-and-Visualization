@@ -1,0 +1,11 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment (Môi trường ảo)
+venv/
+env/
+.env
+.venv/
