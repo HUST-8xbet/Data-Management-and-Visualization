@@ -1,6 +1,6 @@
 import logging
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json, col, date_format
+from pyspark.sql.functions import from_json, col, to_timestamp
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType
 
 logging.basicConfig(level=logging.WARN)
@@ -36,10 +36,11 @@ def main():
     spark = create_spark_session()
     spark.sparkContext.setLogLevel("WARN")
 
+    # Schema đọc từ Kafka (Cứ để String trước)
     schema = StructType([
         StructField("instrument", StringType(), True),
         StructField("price", DoubleType(), True),
-        StructField("timestamp", StringType(), True)
+        StructField("timestamp", StringType(), True) 
     ])
 
     # Đọc Kafka
@@ -52,14 +53,17 @@ def main():
 
     # Xử lý JSON
     value_df = kafka_df.select(from_json(col("value").cast("string"), schema).alias("data")).select("data.*")
-    
     # Ghi vào Postgres bằng foreachBatch
-    query = value_df.writeStream \
+   # Chuyển đổi cột timestamp từ String sang TimestampType chuẩn
+    processed_df = value_df.withColumn("timestamp", to_timestamp(col("timestamp")))
+    # -----------------------------------------
+
+    # Ghi vào Postgres (Dùng processed_df thay vì value_df)
+    query = processed_df.writeStream \
         .foreachBatch(write_to_postgres) \
         .start()
 
     logger.warning("--- DANG CHO DU LIEU DE GHI VAO POSTGRES... ---")
     query.awaitTermination()
-
 if __name__ == "__main__":
     main()

@@ -1,6 +1,7 @@
+import os
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import json
 import requests
 from requests.adapters import HTTPAdapter
@@ -15,7 +16,12 @@ TOP_20_COINS = [
 ]
 
 KAFKA_TOPIC = "bitcoin_prices"
-KAFKA_BOOTSTRAP_SERVERS = ['kafka:29092']
+if os.getenv('AIRFLOW_HOME'):
+    # Nếu chạy trong Airflow (Docker) -> Dùng cổng nội bộ 29092
+    KAFKA_BOOTSTRAP_SERVERS = ['kafka:29092']
+else:
+    # Nếu chạy tay trên máy bạn (Local) -> Dùng cổng mở rộng 9092
+    KAFKA_BOOTSTRAP_SERVERS = ['localhost:9092']
 
 # --- 2. HÀM TẠO SESSION (GIỮ NGUYÊN TỪ CODE GỐC CỦA BẠN) ---
 def create_session():
@@ -75,7 +81,7 @@ def crawl_coindesk_by_instrument(coin_symbol):
                     "open": value.get("CURRENT_DAY_OPEN"),
                     "high": value.get("CURRENT_DAY_HIGH"),
                     "low": value.get("CURRENT_DAY_LOW"),
-                    "timestamp": datetime.now().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "source": "CoinDesk_Data_API"
                 }
         
@@ -119,7 +125,7 @@ default_args = {
 with DAG(
     'coindesk_20_coins_dag',
     default_args=default_args,
-    schedule_interval='*/1 * * * *',
+    schedule='*/1 * * * *',
     catchup=False
 ) as dag:
 
