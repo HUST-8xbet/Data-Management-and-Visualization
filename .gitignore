@@ -5,6 +5,8 @@ env/
 # Bỏ qua file rác của Python
 __pycache__/
 *.pyc
+*.pytest_cache
+
 
 # Bỏ qua dữ liệu của MinIO, Postgres, Kafka (Quan trọng với dự án này)
 data/minio_storage/

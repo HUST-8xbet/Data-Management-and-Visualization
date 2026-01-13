@@ -1,0 +1,13 @@
+kafka:
+  bootstrap_servers: "kafka:9092"  # Hoặc localhost:9092 cho local
+  topic: "bitcoin_prices"
+api:
+  coindesk_url: "https://data-api.coindesk.com/index/cc/v1/latest/tick?market=ccix&instruments={instruments}"
+  instruments: "BTC-USD"
+database:
+  url: "jdbc:postgresql://postgres:5432/crypto_dw"
+  user: "dw_user"
+  password: "dw_password"
+  table: "bitcoin_prices"
+logging:
+  level: "INFO"
