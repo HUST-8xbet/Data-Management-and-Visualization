@@ -3,11 +3,11 @@ kafka:
   topic: "bitcoin_prices"
 api:
   coindesk_url: "https://data-api.coindesk.com/index/cc/v1/latest/tick?market=ccix&instruments={instruments}"
-  instruments: "BTC-USD"
+  instruments: "BTC-USD,ETH-USD,XRP-USD,ADA-USD,SOL-USD,DOGE-USD,DOT-USD,TRX-USD,AVAX-USD,MATIC-USD,LTC-USD,UNI-USD,LINK-USD,XLM-USD,ATOM-USD,ETC-USD,FIL-USD,HBAR-USD,VET-USD,ICP-USD"
 database:
-  url: "jdbc:postgresql://postgres:5432/crypto_dw"
-  user: "dw_user"
-  password: "dw_password"
+  url: "jdbc:postgresql://postgres:5432/airflow"
+  user: "user"
+  password: "pass"
   table: "bitcoin_prices"
 logging:
   level: "INFO"
