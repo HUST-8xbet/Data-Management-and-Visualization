@@ -251,7 +251,7 @@ services:
   # SUPERSET
   # =========================
   superset:
-    image: apache/superset:latest
+    image: my-superset-final:latest # <--- Đổi tên để ép build mới
     container_name: superset
     ports:
       - "8088:8088"

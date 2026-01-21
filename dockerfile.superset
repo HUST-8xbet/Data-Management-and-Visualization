@@ -1,0 +1,11 @@
+# Sử dụng phiên bản cụ thể để ổn định
+FROM apache/superset:3.1.0
+
+# Chuyển sang quyền root để cài đặt
+USER root
+
+# Cài đặt thư viện driver
+RUN pip install psycopg2-binary
+
+# Chuyển lại quyền user mặc định của Superset
+USER superset
